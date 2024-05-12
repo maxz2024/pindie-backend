@@ -59,15 +59,34 @@ const deleteUser = async (req, res, next) => {
 const checkEmptyNameAndEmailAndPassword = async (req, res, next) => {
   if (!req.body.name || !req.body.email || !req.body.password) {
     res.setHeader("Content-Type", "application/json");
-    res.status(400).send(JSON.stringify({ message: "Заполни все поля" }));
+    res
+      .status(400)
+      .send(JSON.stringify({ message: "Введите имя, email и пароль" }));
   } else {
     next();
   }
 };
+
 const checkEmptyNameAndEmail = async (req, res, next) => {
-  if (!req.body.name || !req.body.email) {
+  if (!req.body.username || !req.body.email) {
     res.setHeader("Content-Type", "application/json");
-    res.status(400).send(JSON.stringify({ message: "Заполни имя и email" }));
+    res.status(400).send(JSON.stringify({ message: "Введите имя и email" }));
+  } else {
+    next();
+  }
+};
+
+const checkIsUserExists = async (req, res, next) => {
+  const isInArray = req.usersArray.find((user) => {
+    return req.body.email === user.email;
+  });
+  if (isInArray) {
+    res.setHeader("Content-Type", "application/json");
+    res
+      .status(400)
+      .send(
+        JSON.stringify({ message: "Пользователь с таким email уже существует" })
+      );
   } else {
     next();
   }
@@ -80,5 +99,6 @@ module.exports = {
   updateUser,
   deleteUser,
   checkEmptyNameAndEmailAndPassword,
-  checkEmptyNameAndEmail
+  checkEmptyNameAndEmail,
+  checkIsUserExists
 };

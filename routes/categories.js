@@ -29,6 +29,7 @@ categoriesRouter.get("/categories/:id", findCategoryById, sendCategoryById);
 categoriesRouter.put(
   "/categories/:id",
   findCategoryById,
+  checkEmptyName,
   updateCategory,
   sendCategoryUpdated
 );

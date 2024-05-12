@@ -33,16 +33,12 @@ gamesRouter.post(
 );
 gamesRouter.get("/games/:id", findGameById, sendGameById);
 gamesRouter.put(
-  "/games/:id", // Слушаем запросы по эндпоинту
-  // Шаг 1. Находим игру по id из запроса
+  "/games/:id",
   findGameById,
-  // Шаг 2. Выполняем проверки для корректного обновления
   checkIfUsersAreSafe,
   checkIfCategoriesAvaliable,
   checkEmptyFields,
-  // Шаг 3. Обновляем запись с игрой
   updateGame,
-  // Шаг 4. Возвращаем на клиент ответ с результатом обновления
   sendGameUpdated
 );
 gamesRouter.delete("/games/:id", deleteGame, sendGameDeleted);
