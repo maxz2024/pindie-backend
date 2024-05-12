@@ -3,9 +3,7 @@ const categoryModel = require("./category")
 const userModel = require("./user")
 const gameSchema = new mongoose.Schema({
   title: {
-    // Поле со строковым значением
     type: String,
-    // Явно указываем, что поле обязательно при записи в базу нового документа
     required: true,
   },
   description: {
