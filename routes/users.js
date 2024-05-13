@@ -12,11 +12,12 @@ const {
   checkEmptyNameAndEmailAndPassword,
   checkEmptyNameAndEmail,
   checkIsUserExists,
+  filterPassword,
 } = require("../middlewares/users");
 const { sendUserUpdated, sendUserDeleted } = require("../controllers/users");
 
 const usersRouter = require("express").Router();
-usersRouter.get("/users", findAllUsers, sendAllUsers);
+usersRouter.get("/users", findAllUsers, filterPassword, sendAllUsers);
 usersRouter.post(
   "/users",
   findAllUsers,
@@ -25,7 +26,7 @@ usersRouter.post(
   createUser,
   sendUserCreated
 );
-usersRouter.get("/users/:id", findUserById, sendUserById);
+usersRouter.get("/users/:id", findUserById, filterPassword, sendUserById);
 usersRouter.put(
   "/users/:id",
   findUserById,
