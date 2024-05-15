@@ -1,9 +1,17 @@
 const games = require("../models/game");
 
 const findAllGames = async (req, res, next) => {
+  if (req.query["categories.name"]) {
+    req.gamesArray = await games.findGameByCategory(
+      req.query["categories.name"]
+    );
+    next();
+    return;
+  }
+  // Поиск всех игр в проекте
   req.gamesArray = await games.find({}).populate("categories").populate({
     path: "users",
-    select: "-password",
+    select: "-password", // Исключим данные о паролях пользователей
   });
   next();
 };
@@ -90,14 +98,12 @@ const checkIfUsersAreSafe = async (req, res, next) => {
     return;
   } else {
     res.setHeader("Content-Type", "application/json");
-    res
-      .status(400)
-      .send(
-        JSON.stringify({
-          message:
-            "Нельзя удалять пользователей или добавлять больше одного пользователя",
-        })
-      );
+    res.status(400).send(
+      JSON.stringify({
+        message:
+          "Нельзя удалять пользователей или добавлять больше одного пользователя",
+      })
+    );
   }
 };
 
@@ -107,13 +113,11 @@ const checkIsGameExists = async (req, res, next) => {
   });
   if (isInArray) {
     res.setHeader("Content-Type", "application/json");
-    res
-      .status(400)
-      .send(
-        JSON.stringify({
-          message: "Игра с таким названием уже существует",
-        })
-      );
+    res.status(400).send(
+      JSON.stringify({
+        message: "Игра с таким названием уже существует",
+      })
+    );
   } else {
     next();
   }
