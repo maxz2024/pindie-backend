@@ -1,7 +1,8 @@
 const allowedCors = [
   "https://practicum.yandex.ru",
   "https://students-projects.ru",
-  "localhost:3000",
+  "http://localhost:3000",
+  "http://localhost:3001",
 ];
 
 function cors(req, res, next) {
@@ -14,7 +15,7 @@ function cors(req, res, next) {
     );
     res.header(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
+      "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization"
     );
   }
   next();
