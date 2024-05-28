@@ -58,11 +58,13 @@ const generateUsersList = (usersArray, template, parent) => {
   }
   usersArray.forEach(element => {
     const clone = template.content.cloneNode(true);
+    console.log(clone)
     clone.querySelector(".name").textContent = element.username;
     clone.querySelector("li").id = `user-${element._id}`;
     clone.querySelector(".edit-user-button").dataset.id = element._id;
     clone.querySelector(".delete-user-button").dataset.id = element._id;
     clone.querySelector(".email").textContent = element.email;
+    clone.querySelector(".role").textContent = element.role;
     parent.append(clone);
   });
 };

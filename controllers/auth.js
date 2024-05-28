@@ -6,6 +6,14 @@ const login = (req, res) => {
   const { email, password } = req.body;
   users
     .findUserByCredentials(email, password)
+    // .then((user)=> {
+    //   if (user.role == "admin"){
+    //     return user
+    //   }
+    //   else {
+    //     return Promise.reject(new Error("Нет доступа"))
+    //   }
+    // })
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, "some-secret-key", {
         expiresIn: 3600,
@@ -15,7 +23,7 @@ const login = (req, res) => {
     .then(({ user, token }) => {
       res
         .status(200)
-        .send({ _id: user._id, username: user.username, email: user.email, jwt: token });
+        .send({ _id: user._id, username: user.username, email: user.email, role: user.role, jwt: token });
     })
     .catch((error) => {
       res.status(401).send({ message: error.message });

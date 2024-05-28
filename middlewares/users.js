@@ -103,6 +103,20 @@ const checkIsUserExists = async (req, res, next) => {
   }
 };
 
+const checkRoleExists = async (req, res, next) => {
+  if (["superadmin", "admin", "user"].includes(req.body.role)) {
+    next()
+  }
+  else {
+    res.setHeader("Content-Type", "application/json");
+    res
+      .status(400)
+      .send(
+        JSON.stringify({ message: "Введена ошибочная роль" })
+      );
+  }
+}
+
 const filterPassword = (req, res, next) => {
   const filterUser = (user) => {
     const { password, ...userWithoutPassword } = user.toObject();
@@ -125,6 +139,7 @@ module.exports = {
   checkEmptyNameAndEmailAndPassword,
   checkEmptyNameAndEmail,
   checkIsUserExists,
+  checkRoleExists,
   filterPassword,
   hashPassword,
 };

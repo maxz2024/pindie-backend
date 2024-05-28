@@ -138,7 +138,7 @@ section {
 .users-list li div {
   display: grid;
   gap: 1em;
-  grid-template-columns: 1fr 1fr min-content min-content;
+  grid-template-columns: 1fr 1fr 1fr min-content min-content;
   align-items: center;
 }
 
@@ -329,7 +329,8 @@ button {
   }
 
   .users-list .name,
-  .users-list .email {
+  .users-list .email, 
+  .users-list .role {
     grid-column: 1 / -1;
   }
 

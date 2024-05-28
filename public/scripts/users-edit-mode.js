@@ -2,7 +2,8 @@ import { addPutUserListeners, removePutUserListeners } from "./requests.js";
 
 export const userCurrentState = {
   username: "",
-  email: ""
+  email: "",
+  role: ""
 };
 
 export let usersEditModeOn = false;
@@ -32,6 +33,13 @@ const useEditableUserElementsState = userId => {
       canEditText: true,
       canSetTransparency: true,
       canSetVisibility: false
+    },
+    {
+      name: "role",
+      element: document.querySelector(`#user-${userId} .role`),
+      canEditText: true,
+      canSetTransparency: true,
+      canSetVisibility: false
     }
   ];
   return targetElementsState;
@@ -49,6 +57,10 @@ export const fillUsersStateFromPage = userId => {
     "email",
     targetElementsState.find(item => item.name === "email").element.textContent
   );
+  setCurrentUserState(
+    "role",
+    targetElementsState.find(item => item.name === "role").element.textContent
+  );
 };
 
 export const fillUsersStateFromForm = userId => {
@@ -62,6 +74,10 @@ export const fillUsersStateFromForm = userId => {
   setCurrentUserState(
     "email",
     targetElementsState.find(item => item.name === "email").element.textContent
+  );
+  setCurrentUserState(
+    "role",
+    targetElementsState.find(item => item.name === "role").element.textContent
   );
 };
 
