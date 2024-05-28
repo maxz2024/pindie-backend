@@ -13,7 +13,7 @@ const hashPassword = async (req, res, next) => {
   } catch (error) {
     res.status(400).send({ message: "Ошибка хеширования пароля" });
   }
-}; 
+};
 
 const findAllUsers = async (req, res, next) => {
   req.usersArray = await users.find({});
@@ -105,17 +105,38 @@ const checkIsUserExists = async (req, res, next) => {
 
 const checkRoleExists = async (req, res, next) => {
   if (["superadmin", "admin", "user"].includes(req.body.role)) {
-    next()
-  }
-  else {
+    next();
+  } else {
     res.setHeader("Content-Type", "application/json");
-    res
-      .status(400)
-      .send(
-        JSON.stringify({ message: "Введена ошибочная роль" })
-      );
+    res.status(400).send(JSON.stringify({ message: "Введена ошибочная роль" }));
   }
-}
+};
+
+const checkRoleAdd = async (req, res, next) => {
+
+    if ((req.isGuest && req.body.role !== "user") || (req.user && req.user.role == "admin" && req.body.role !== "user")) {
+      res.status(400).send(JSON.stringify({
+        message: `Вы не имеете прав для создания пользователя с ролью ${req.body.role}`,
+      }));
+    }
+    else if (req.user && req.user.role == "user") {
+      res
+        .status(400)
+        .send(
+          JSON.stringify({
+            message: "Вы не имеете прав для создания пользователя ",
+          })
+        );
+    }
+    else {
+      next()
+    }
+};
+
+const getMe = async (req, res, next) => {
+  req.user = await users.findById(req.user._id);
+  next();
+};
 
 const filterPassword = (req, res, next) => {
   const filterUser = (user) => {
@@ -140,6 +161,8 @@ module.exports = {
   checkEmptyNameAndEmail,
   checkIsUserExists,
   checkRoleExists,
+  checkRoleAdd,
   filterPassword,
   hashPassword,
+  getMe,
 };

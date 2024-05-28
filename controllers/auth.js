@@ -6,14 +6,12 @@ const login = (req, res) => {
   const { email, password } = req.body;
   users
     .findUserByCredentials(email, password)
-    // .then((user)=> {
-    //   if (user.role == "admin"){
-    //     return user
-    //   }
-    //   else {
-    //     return Promise.reject(new Error("Нет доступа"))
-    //   }
-    // })
+    .then((user)=> {
+      if (req.headers.origin == "http://localhost:3001" && user.role == "user"){
+        return Promise.reject(new Error("Нет доступа"))
+      }
+      return user;
+    })
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, "some-secret-key", {
         expiresIn: 3600,

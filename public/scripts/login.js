@@ -17,8 +17,6 @@ form &&
         throw new Error((await response.json()).message);
       }
       const result = await response.json();
-      if (result.role == "user")
-        throw new Error("Нет доступа");
       document.cookie = `jwt=${result.jwt}`;
       window.location.href = "/admin/dashboard";
     } catch (error) {

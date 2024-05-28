@@ -1,21 +1,27 @@
 const jwt = require("jsonwebtoken");
+const users = require("../models/user");
 
-const checkAuth = (req, res, next) => {
+const checkAuth = async (req, res, next) => {
   const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res.status(401).send({ message: "Необходима авторизация" });
+  if (req.url.includes("/users") && !authorization){
+    req.isGuest = true
+    next();
   }
+  else {
+    if (!authorization || !authorization.startsWith("Bearer ")) {
+      return res.status(401).send({ message: "Необходима авторизация" });
+    }
 
-  const token = authorization.replace("Bearer ", "");
+    const token = authorization.replace("Bearer ", "");
 
-  try {
-    req.user = jwt.verify(token, "some-secret-key");
-  } catch (err) {
-    return res.status(401).send({ message: "Необходима авторизация" });
+    try {
+      req.user = await users.findById(jwt.verify(token, "some-secret-key")._id);
+    } catch (err) {
+      return res.status(401).send({ message: "Необходима авторизация" });
+    }
+
+    next();
   }
-
-  next();
 };
 
 const checkCookiesJWT = (req, res, next) => {
@@ -26,5 +32,13 @@ const checkCookiesJWT = (req, res, next) => {
   next();
 }; 
 
-module.exports = { checkAuth, checkCookiesJWT };
+const checkRoleAuth = async (req, res, next) => {
+  if (req.user.role != "user") {
+    next()
+  }
+  else {
+    return res.status(401).send({ message: "Ошибка доступа" });
+  }
+}
+module.exports = { checkAuth, checkCookiesJWT, checkRoleAuth};
 
