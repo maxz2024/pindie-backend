@@ -89,14 +89,14 @@ const checkEmptyNameAndEmail = async (req, res, next) => {
 
 const checkIsUserExists = async (req, res, next) => {
   const isInArray = req.usersArray.find((user) => {
-    return req.body.email === user.email;
+    return req.body.email === user.email || req.body.username === user.username;
   });
   if (isInArray) {
     res.setHeader("Content-Type", "application/json");
     res
       .status(400)
       .send(
-        JSON.stringify({ message: "Пользователь с таким email уже существует" })
+        JSON.stringify({ message: "Пользователь с таким emai/username уже существует" })
       );
   } else {
     next();

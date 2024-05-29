@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 
 const login = (req, res) => {
-  const { email, password } = req.body;
+  const { login, password } = req.body;
   users
-    .findUserByCredentials(email, password)
+    .findUserByCredentials(login, password)
     .then((user)=> {
       if (req.headers.origin == "http://localhost:3001" && user.role == "user"){
         return Promise.reject(new Error("Нет доступа"))
@@ -14,7 +14,7 @@ const login = (req, res) => {
     })
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, "some-secret-key", {
-        expiresIn: 3600,
+        expiresIn: "7d",
       });
       return { user, token };
     })

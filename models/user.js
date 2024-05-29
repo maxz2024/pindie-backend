@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
+    unique: true,
     required: true,
   },
   email: {
@@ -18,12 +19,16 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ["user", "admin", "superadmin"]
-  }
+    enum: ["user", "admin", "superadmin"],
+  },
 });
-
-userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).then((user) => {
+userSchema.statics.findUserByCredentials = function (
+  login,
+  password
+) {
+  return this.findOne({
+    $or: [{ email: login }, { username: login }],
+  }).then((user) => {
     if (!user) {
       return Promise.reject(new Error("Неправильные почта или пароль"));
     }
