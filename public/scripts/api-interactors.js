@@ -15,6 +15,24 @@ const getData = async url => {
   }
 };
 
+const getMe = async url  => {
+  const jwt = getJWTFromCookie();
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: jwt && `Bearer ${jwt}`
+      }
+    }
+    )
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const postData = async (url, data) => {
   const jwt = getJWTFromCookie();
   try {
@@ -71,4 +89,4 @@ const deleteData = async url => {
   }
 };
 
-export { getData, postData, putData, deleteData };
+export { getData, getMe, postData, putData, deleteData };

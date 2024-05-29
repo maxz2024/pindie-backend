@@ -1,4 +1,4 @@
-import { getData } from "./api-interactors.js";
+import { getData, getMe } from "./api-interactors.js";
 import {
   renderGames,
   renderUsersList,
@@ -38,6 +38,7 @@ export async function reload(blockName) {
 }
 
 (async function init() {
+  document.querySelector(".text_role").innerHTML = `Роль: ${(await getMe("/api/me")).role}`
   await loadGamesBlock();
   await loadCategoriesBlock();
   await loadUsersBlock();
