@@ -89,7 +89,7 @@ const checkEmptyNameAndEmail = async (req, res, next) => {
 
 const checkIsUserExists = async (req, res, next) => {
   const isInArray = req.usersArray.find((user) => {
-    return req.body.email === user.email || req.body.username === user.username;
+    return req.body.email.toLowerCase() === user.email.toLowerCase() || req.body.username.toLowerCase() === user.username.toLowerCase();
   });
   if (isInArray) {
     res.setHeader("Content-Type", "application/json");
