@@ -87,16 +87,33 @@ const checkEmptyNameAndEmail = async (req, res, next) => {
   }
 };
 
+const getUsernameOrEmailFromRoute = async (req, res, next) => {
+  req.body.email = req.params.login;
+  req.body.username = req.params.login;
+  next();
+};
+
 const checkIsUserExists = async (req, res, next) => {
-  const isInArray = req.usersArray.find((user) => {
-    return req.body.email.toLowerCase() === user.email.toLowerCase() || req.body.username.toLowerCase() === user.username.toLowerCase();
-  });
+  const isEmailInArray = req.usersArray.some(
+    (user) => req.body.email.toLowerCase() === user.email.toLowerCase()
+  );
+  const isUsernameInArray = req.usersArray.some(
+    (user) => req.body.username.toLowerCase() === user.username.toLowerCase()
+  );
+  const isInArray =
+    isEmailInArray === true
+      ? "email"
+      : isUsernameInArray === true
+      ? "username"
+      : false;
   if (isInArray) {
     res.setHeader("Content-Type", "application/json");
     res
       .status(400)
       .send(
-        JSON.stringify({ message: "Пользователь с таким emai/username уже существует" })
+        JSON.stringify({
+          message: `${isInArray} занят`,
+        })
       );
   } else {
     next();
@@ -113,24 +130,24 @@ const checkRoleExists = async (req, res, next) => {
 };
 
 const checkRoleAdd = async (req, res, next) => {
-
-    if ((req.isGuest && req.body.role !== "user") || (req.user && req.user.role == "admin" && req.body.role !== "user")) {
-      res.status(400).send(JSON.stringify({
+  if (
+    (req.isGuest && req.body.role !== "user") ||
+    (req.user && req.user.role == "admin" && req.body.role !== "user")
+  ) {
+    res.status(400).send(
+      JSON.stringify({
         message: `Вы не имеете прав для создания пользователя с ролью ${req.body.role}`,
-      }));
-    }
-    else if (req.user && req.user.role == "user") {
-      res
-        .status(400)
-        .send(
-          JSON.stringify({
-            message: "Вы не имеете прав для создания пользователя ",
-          })
-        );
-    }
-    else {
-      next()
-    }
+      })
+    );
+  } else if (req.user && req.user.role == "user") {
+    res.status(400).send(
+      JSON.stringify({
+        message: "Вы не имеете прав для создания пользователя ",
+      })
+    );
+  } else {
+    next();
+  }
 };
 
 const getMe = async (req, res, next) => {
@@ -165,4 +182,5 @@ module.exports = {
   filterPassword,
   hashPassword,
   getMe,
+  getUsernameOrEmailFromRoute,
 };

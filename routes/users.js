@@ -3,6 +3,7 @@ const {
   sendUserCreated,
   sendUserById,
   sendMe,
+  sendResult,
 } = require("../controllers/users");
 const {
   findAllUsers,
@@ -18,6 +19,7 @@ const {
   hashPassword,
   getMe,
   checkRoleAdd,
+  getUsernameOrEmailFromRoute,
 } = require("../middlewares/users");
 const { sendUserUpdated, sendUserDeleted } = require("../controllers/users");
 const { checkAuth, checkRoleAuth } = require("../middlewares/auth");
@@ -37,7 +39,10 @@ usersRouter.post(
   createUser,
   sendUserCreated
 );
+usersRouter.get("/users/check-exist/:login", getUsernameOrEmailFromRoute, findAllUsers, checkIsUserExists, sendResult);
 usersRouter.get("/users/:id", findUserById, filterPassword, sendUserById);
+
+
 usersRouter.put(
   "/users/:id",
   checkAuth,

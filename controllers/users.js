@@ -28,6 +28,11 @@ const sendMe = (req, res) => {
   res.end(JSON.stringify(req.user));
 };
 
+const sendResult = (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({message: "Свободен"}));
+}
+
 module.exports = {
   sendAllUsers,
   sendUserCreated,
@@ -35,4 +40,5 @@ module.exports = {
   sendUserUpdated,
   sendUserDeleted,
   sendMe,
+  sendResult
 };
