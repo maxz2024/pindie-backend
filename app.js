@@ -10,7 +10,7 @@ const pagesRouter = require("./routes/pages");
 const app = express();
 const PORT = 3001;
 
-connectToDatabase();
+// connectToDatabase();
 
 app.use(
   cors,
