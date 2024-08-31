@@ -1,6 +1,5 @@
 const allowedCors = [
-  "http://localhost:3000",
-  "https://pindie-startkit.vercel.app"
+  "https://frontend.pindie.my-kinozal.ru"
 ];
 
 function cors(req, res, next) {
